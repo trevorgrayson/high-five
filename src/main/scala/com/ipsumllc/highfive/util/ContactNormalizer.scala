@@ -3,6 +3,7 @@ package com.ipsumllc.highfive.util
 /**
  * Created by tgrayson on 8/18/14.
  */
+
 object ContactNormalizer {
   val BasicFormat = "^[1]{0,1}([0-9]{10})$".r
   val EmailFormat = "^(\\d{10,11})@.*".r

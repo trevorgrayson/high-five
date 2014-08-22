@@ -22,4 +22,5 @@ class UserActor(var user: User) extends Actor {
     case WhoAreYou => sender ! user
     case Update(u:User) => user = u
   }
+
 }
