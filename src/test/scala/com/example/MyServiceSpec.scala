@@ -28,5 +28,11 @@ class MyServiceSpec extends Specification with Specs2RouteTest with MyService {
         responseAs[String] === "HTTP method not allowed, supported methods: GET"
       }
     }
+//
+//    "return on register" in {
+//      Post("/register") ~> myRoute ~> check {
+//        status === OK
+//      }
+//    }
   }
 }
