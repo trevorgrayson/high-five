@@ -12,7 +12,7 @@ class UserSupe extends Actor {
   var users = Map.empty[String, ActorRef]
 
   def receive = {
-    case u: User => getUser(u)
+    case u: User => sender ! getUser(u)
     case msg@Update(u: User) => getUser(u) forward msg
   }
 

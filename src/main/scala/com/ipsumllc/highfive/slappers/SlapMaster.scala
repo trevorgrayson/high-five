@@ -11,7 +11,10 @@ case class Slap( to: User, intensity: Double, from: User )
 class SlapMaster extends Actor {
 
   def receive = {
-    case m: Slap => slapper(m) forward(m)
+    case m: Slap => {
+      println("SENDING SLAP MAS")
+      slapper(m) forward(m)
+    }
   }
 
   def slapper(m: Slap) = context.actorOf(Props(new UserActor(m.to) with Slapper))

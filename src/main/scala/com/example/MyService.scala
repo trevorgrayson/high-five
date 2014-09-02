@@ -6,10 +6,16 @@ import spray.http._
 import MediaTypes._
 import com.ipsumllc.highfive.slappers.{Slap, SlapMaster}
 import com.ipsumllc.highfive.users.User
+import com.ipsumllc.highfive.services.SlapServices
+import akka.util.Timeout
+import scala.concurrent.ExecutionContext
+import ExecutionContext.Implicits.global
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
-class MyServiceActor extends Actor with MyService {
+class MyServiceActor extends Actor
+  with MyService
+  with SlapServices {
 
   // the HttpService trait defines only one abstract member, which
   // connects the services environment to the enclosing actor or test
@@ -21,12 +27,11 @@ class MyServiceActor extends Actor with MyService {
   def receive = runRoute(myRoute)
 }
 
-
 // this trait defines our service behavior independently from the service actor
-trait MyService extends HttpService {
-
-//
-//  val slapMaster = context.actorOf(Props(new SlapMaster), "master")
+trait MyService extends HttpService with SlapServices {
+  //MEHHH can we not be asking?
+  import scala.concurrent.duration._
+  import akka.pattern.ask
 
   val myRoute =
     path("") {
@@ -35,32 +40,54 @@ trait MyService extends HttpService {
           "Say hello"
         }
       }
-////      get {
-//        parameters("from".! , "to".!) { (from: String, to: String) =>
-//          respondWithMediaType(`text/html`) { // XML is marshalled to `text/xml` by default, so we simply override here
-//            //slapMaster ! Slap( User("Trevor","8603849759"), 1.2, User("Trevor","8603849759") )
-//            complete {
-//
-//              <html>
-//                <body>
-//                  <h1>Say hello to <i>spray-routing</i> on <i>spray-can</i>!</h1>
-//                </body>
-//              </html>
-//            }
-//          }
-//        }
-////      }
     } ~
-    path("/register") {
-      get {
-        complete {
-          "Gettin'"
+      path("register") {
+        get {
+          complete {
+            "Gettin'"
+          }
         }
-      }
         post {
           complete {
             "OK"
           }
         }
+      } ~
+      pathPrefix("slap" / Segment ) { (from) =>
+        get {
+          complete(s"SLAP! booyah")
+        }
+      } ~
+  pathPrefix("slap") {
+    pathPrefix(Segment) { from =>
+      path(Segment) { to =>
+        complete(s"$from slapped $to")
+      }
     }
+  } ~
+  pathPrefix("then") {
+    pathPrefix(IntNumber) { from =>
+      path("highfived") {
+        path(IntNumber) { to =>
+          implicit val timeout = Timeout(3 seconds)
+          val fU = User(from.toString, None, None)
+          val tU = User(to.toString, None, None)
+          val result = for {
+            to <- userSupe ? tU
+            a  <- slapper ? Slap(tU, 1.0, fU)
+          } yield "OK"
+
+          complete(result)
+        }
+      }
+    }
+  } ~
+  path("users") {
+    val contact, name, appleId = "1"
+
+    implicit val timeout = Timeout(3 seconds)
+    val user = User(contact,Some(name), Some(appleId))
+    userSupe ? user
+    complete("OK")
+  }
 }

@@ -28,10 +28,26 @@ class MyServiceSpec extends Specification with Specs2RouteTest with MyService {
         responseAs[String] === "HTTP method not allowed, supported methods: GET"
       }
     }
-//
-//    "return on register" in {
-//      Post("/register") ~> myRoute ~> check {
+
+    "return on register" in {
+      Post("/register") ~> myRoute ~> check {
+        status === OK
+      }
+    }
+
+    "SLAP THE HIGH 5!!!" in {
+      val from = "8603849759"
+      val to = "8605559759"
+      Post(s"/slap/$from/$to") ~> myRoute ~> check {
+        status === OK
+        responseAs[String] must contain(s"$from slapped $to")
+      }
+    }
+
+//    "HIGH 5!!! Second notation" in {
+//      Post("/then/8603849759/highfived/8605559759") ~> myRoute ~> check {
 //        status === OK
+//        responseAs[String] must contain("OK")
 //      }
 //    }
   }

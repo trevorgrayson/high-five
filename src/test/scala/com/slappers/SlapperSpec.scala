@@ -8,8 +8,8 @@ import akka.testkit.TestActorRef
 import akka.actor.{ActorSystem, Props}
 
 /**
- * Created by tgrayson on 8/21/14.
- */
+* Created by tgrayson on 8/21/14.
+*/
 
 class SlapperSpec extends Specification {
   implicit val system = ActorSystem("Slapper")

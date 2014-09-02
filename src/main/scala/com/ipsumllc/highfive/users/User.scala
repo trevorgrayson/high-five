@@ -4,6 +4,9 @@ import akka.actor.Actor
 import com.ipsumllc.highfive.slappers.Slap
 import scalaj.http.Http
 
+//import akka.actor._
+//import akka.persistence._
+
 /**
  * Created by tgrayson on 7/23/14.
  */
@@ -16,11 +19,22 @@ case class User( contact: String, _name: Option[String], appleId: Option[String]
   }
 }
 
-class UserActor(var user: User) extends Actor {
+class UserActor(var state: User) extends /*Persistent*/Actor {
+  /*override*/def persistenceId = s"user-${state.contact}"
 
-  def receive = {
-    case WhoAreYou => sender ! user
-    case Update(u:User) => user = u
+  val receive/*Command*/: Receive = {
+    case WhoAreYou => sender ! state
+    case Update(u:User) => state = u
+    case user: User => //persist(user)(updateState)
+    //case "snap" => saveSnapshot(state)
+    case "print" => println(state)
   }
 
+  def updateState(s: User): Unit =
+    state = s
+
+  val receiveRecover: Receive = {
+    case user: User  => updateState(user)
+    //case SnapshotOffer(_, snapshot: User) => state = snapshot
+  }
 }
