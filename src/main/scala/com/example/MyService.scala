@@ -8,7 +8,7 @@ import com.ipsumllc.highfive.slappers.{Slap, SlapMaster}
 import com.ipsumllc.highfive.users.User
 import com.ipsumllc.highfive.services.SlapServices
 import akka.util.Timeout
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{Await, ExecutionContext}
 import ExecutionContext.Implicits.global
 
 // we don't implement our route structure directly in the service actor because
@@ -41,43 +41,58 @@ trait MyService extends HttpService with SlapServices {
         }
       }
     } ~
-      path("register") {
-        get {
-          complete {
-            "Gettin'"
-          }
+    path("register") {
+      get {
+        complete {
+          "Gettin'"
         }
-        post {
-          complete {
-            "OK"
-          }
+      }
+      post {
+        complete {
+          "OK"
         }
-      } ~
-      pathPrefix("slap" / Segment ) { (from) =>
-        get {
-          complete(s"SLAP! booyah")
-        }
-      } ~
+      }
+    } ~
+//    pathPrefix("slap" / Segment ) { (from) =>
+//        get {
+//          complete(s"SLAP! booyah")
+//        }
+//    } ~
   pathPrefix("slap") {
     pathPrefix(Segment) { from =>
       path(Segment) { to =>
-        complete(s"$from slapped $to")
+        implicit val timeout = Timeout(3 seconds)
+        val fU = User(from.toString, None, None)
+        val tU = User(to.toString, None, None)
+        val user = Await.result(userSupe ? tU, 3 seconds)
+        user match {
+          case u: User =>
+            Await.result(slapper ? Slap(u, 1.0, fU), 10 seconds)
+        }
+
+        for {
+          to <- userSupe ? tU
+          r  <- slapper ? (tU, fU, 1.0)
+        } yield r
+
+        complete("OK")
+        //complete(s"$from slapped $to")
       }
     }
   } ~
   pathPrefix("then") {
     pathPrefix(IntNumber) { from =>
-      path("highfived") {
+      pathPrefix("highfived") {
         path(IntNumber) { to =>
-          implicit val timeout = Timeout(3 seconds)
-          val fU = User(from.toString, None, None)
-          val tU = User(to.toString, None, None)
-          val result = for {
-            to <- userSupe ? tU
-            a  <- slapper ? Slap(tU, 1.0, fU)
-          } yield "OK"
+//          implicit val timeout = Timeout(3 seconds)
+//          val fU = User(from.toString, None, None)
+//          val tU = User(to.toString, None, None)
+//          val result = for {
+//            to <- userSupe ? tU
+//            a  <- slapper ? Slap(tU, 1.0, fU)
+//          } yield "OK"
 
-          complete(result)
+          complete("OK")
         }
       }
     }

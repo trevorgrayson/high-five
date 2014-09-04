@@ -16,7 +16,6 @@ trait Slapper  {
   val domain = "http://ipsumllc.com/hi5/"
 
   def sendSlap(m: Slap) {
-    println("SENDING SLAP")
     request(m).responseCode
 //    val result = Http.postData("http://example.com/url", """{"id":"12","json":"data"}""")
 //      .header("Content-Type", "application/json")
@@ -26,7 +25,10 @@ trait Slapper  {
   }
 
   def request(m: Slap) = Http(domain).
-    param("from", m.from.name).
-    param("ferocity", m.intensity.toString).
-    param("to", m.to.contact)
+      param("id", m.to.contact).
+      param("name", m.from.name).
+      param("jerk", m.intensity.toString)
+//    param("from", m.from.name).
+//    param("ferocity", m.intensity.toString).
+//    param("to", m.to.contact)
 }

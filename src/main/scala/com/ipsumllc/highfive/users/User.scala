@@ -1,7 +1,7 @@
 package com.ipsumllc.highfive.users
 
 import akka.actor.Actor
-import com.ipsumllc.highfive.slappers.Slap
+import com.ipsumllc.highfive.slappers.{Slapper, Slap}
 import scalaj.http.Http
 
 //import akka.actor._
@@ -19,13 +19,19 @@ case class User( contact: String, _name: Option[String], appleId: Option[String]
   }
 }
 
-class UserActor(var state: User) extends /*Persistent*/Actor {
+class UserActor(var state: User) extends /*Persistent*/Actor
+  with Slapper {
   /*override*/def persistenceId = s"user-${state.contact}"
 
   val receive/*Command*/: Receive = {
     case WhoAreYou => sender ! state
     case Update(u:User) => state = u
-    case user: User => //persist(user)(updateState)
+    case user: User => sender ! state
+    //persist(user)(updateState)
+    case s: Slap => {
+      sendSlap(s)
+      sender ! "OK"
+    }
     //case "snap" => saveSnapshot(state)
     case "print" => println(state)
   }

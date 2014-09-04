@@ -12,15 +12,12 @@ class UserSupe extends Actor {
   var users = Map.empty[String, ActorRef]
 
   def receive = {
-    case u: User => sender ! getUser(u)
+    case u: User => getUser(u) forward u
     case msg@Update(u: User) => getUser(u) forward msg
   }
 
   def getUser(u: User): ActorRef = {
     val id: String = u.contact
-//    .getOrElse({
-//      throw new Exception("Missing user Id!!!")
-//    })
 
     users.getOrElse(id, {
       users = users ++ Map(id -> context.actorOf(
