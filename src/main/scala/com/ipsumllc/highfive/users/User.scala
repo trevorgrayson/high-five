@@ -26,10 +26,28 @@ class UserActor(var state: User) extends /*Persistent*/Actor
   val receive/*Command*/: Receive = {
     case WhoAreYou => sender ! state
     case Update(u:User) => state = u
-    case user: User => sender ! state
+    case user: User => { //optimistically updating, why?
+      if(state._name == None || state.appleId == None) {
+        val appleId = if( state.appleId == None ) {
+          user.appleId
+        } else {
+          state.appleId
+        }
+
+        val _name = if( state._name == None ) {
+          user._name
+        } else {
+          state._name
+        }
+
+        state = User(state.contact, _name, appleId)
+      }
+
+      sender ! state
+    }
     //persist(user)(updateState)
     case s: Slap => {
-      sendSlap(s)
+      sendSlap( Slap(state, s.intensity, s.from) )
       sender ! "OK"
     }
     //case "snap" => saveSnapshot(state)

@@ -24,10 +24,18 @@ trait Slapper  {
 //      .responseCode
   }
 
-  def request(m: Slap) = Http(domain).
+  def request(m: Slap) = {
+    val http = Http(domain).
       param("id", m.to.contact).
       param("name", m.from.name).
       param("jerk", m.intensity.toString)
+
+    if( m.to.appleId != None ) {
+      http.param("appleId", m.to.appleId.get)
+    } else {
+      http
+    }
+  }
 //    param("from", m.from.name).
 //    param("ferocity", m.intensity.toString).
 //    param("to", m.to.contact)

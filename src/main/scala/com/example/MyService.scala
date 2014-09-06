@@ -37,46 +37,32 @@ trait MyService extends HttpService with SlapServices {
     path("") {
       get {
         complete {
-          "Say hello"
+          "What's up bro?!"
         }
       }
     } ~
     path("register") {
-      get {
-        complete {
-          "Gettin'"
-        }
-      }
       post {
         complete {
           "OK"
         }
       }
     } ~
-//    pathPrefix("slap" / Segment ) { (from) =>
-//        get {
-//          complete(s"SLAP! booyah")
-//        }
-//    } ~
   pathPrefix("slap") {
     pathPrefix(Segment) { from =>
-      path(Segment) { to =>
-        implicit val timeout = Timeout(3 seconds)
-        val fU = User(from.toString, None, None)
-        val tU = User(to.toString, None, None)
-        val user = Await.result(userSupe ? tU, 3 seconds)
-        user match {
-          case u: User =>
-            Await.result(slapper ? Slap(u, 1.0, fU), 10 seconds)
+      pathPrefix(Segment) { to =>
+        path(DoubleNumber) { jerk =>
+          implicit val timeout = Timeout(10 seconds)
+          val fU = User(from.toString, None, None)
+          val tU = User(to.toString, None, None)
+
+          for {
+            r  <- slapper ? (tU, fU, jerk)
+          } yield r
+
+          complete("OK")
+          //complete(s"$from slapped $to")
         }
-
-        for {
-          to <- userSupe ? tU
-          r  <- slapper ? (tU, fU, 1.0)
-        } yield r
-
-        complete("OK")
-        //complete(s"$from slapped $to")
       }
     }
   } ~

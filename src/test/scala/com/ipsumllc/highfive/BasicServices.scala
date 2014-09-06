@@ -15,9 +15,10 @@ class BasicServices extends Specification
   def actorRefFactory = system
 
   val fromContact = "8603849759"
-  val contact = "9195551234"
-  val applId  = "x1y2z3"
-  val name    = "Tre"
+  val contact     = "9195551234"
+  val applId      = "x1y2z3"
+  val name        = "Tre"
+  val intensity   = 1.9
 
   "highfive.ipsumllc.com" should {
 
@@ -27,16 +28,18 @@ class BasicServices extends Specification
       }
     }
 
-    "send a slap to someone who is not registered" in {
-      Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
-        status === OK
-      }
-    }
+//    "send a slap to someone who is not registered" in {
+//      //Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
+//      Post(s"/slap/$fromContact/$contact/$intensity") ~> myRoute ~> check {
+//        status === OK
+//      }
+//    }
 
-    "send a slap to someone who is registered" in {
-      Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
-        status === OK
-      }
-    }
+//    "send a slap to someone who is registered" in {
+//      pending
+//      Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
+//        status === OK
+//      }
+//    }
   }
 }

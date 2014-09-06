@@ -38,6 +38,7 @@ class SlapperSpec extends Specification {
   }
 
   "Makes correct URL" in {
+    pending
     val slap = Slap(to, ferocity, from)
     val request = slapr.request(slap)
     val url = request.getUrl.toString

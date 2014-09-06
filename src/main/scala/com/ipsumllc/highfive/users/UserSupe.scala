@@ -12,11 +12,11 @@ class UserSupe extends Actor {
   var users = Map.empty[String, ActorRef]
 
   def receive = {
-    case u: User => getUser(u) forward u
-    case msg@Update(u: User) => getUser(u) forward msg
+    case u: User => getUserActor(u) forward u
+    case msg@Update(u: User) => getUserActor(u) forward msg
   }
 
-  def getUser(u: User): ActorRef = {
+  def getUserActor(u: User): ActorRef = {
     val id: String = u.contact
 
     users.getOrElse(id, {
