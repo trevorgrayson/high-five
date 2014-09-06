@@ -1,4 +1,6 @@
-organization  := "com.example"
+//import AssemblyKeys._
+
+organization  := "com.ipsumllc"
 
 version       := "0.1"
 
@@ -19,5 +21,7 @@ libraryDependencies ++= {
     "org.scalaj"          %% "scalaj-http"    % "0.3.16"
   )
 }
+
+//jarName in assembly := "blah.jar"
 
 Revolver.settings
