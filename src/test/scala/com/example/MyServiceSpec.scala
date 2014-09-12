@@ -29,12 +29,6 @@ class MyServiceSpec extends Specification with Specs2RouteTest with MyService {
       }
     }
 
-    "return on register" in {
-      Post("/register") ~> myRoute ~> check {
-        status === OK
-      }
-    }
-
     "SLAP THE HIGH 5!!!" in {
       val from = "8603849759"
       val to = "8605559759"

@@ -1,15 +1,16 @@
 package com.example
 
-import akka.actor.{ActorSystem, Props, Actor}
+import akka.actor.{Actor}
 import spray.routing._
 import spray.http._
 import MediaTypes._
-import com.ipsumllc.highfive.slappers.{Slap, SlapMaster}
 import com.ipsumllc.highfive.users.User
 import com.ipsumllc.highfive.services.SlapServices
 import akka.util.Timeout
-import scala.concurrent.{Await, ExecutionContext}
+
+import scala.concurrent.{Future, Await, ExecutionContext}
 import ExecutionContext.Implicits.global
+import com.ipsumllc.highfive.slappers.Slap
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
@@ -32,22 +33,12 @@ trait MyService extends HttpService with SlapServices {
   //MEHHH can we not be asking?
   import scala.concurrent.duration._
   import akka.pattern.ask
+  implicit val timeout = Timeout(3 seconds)
 
   val myRoute =
-    path("") {
-      get {
-        complete {
-          "What's up bro?!"
-        }
-      }
-    } ~
-    path("register") {
-      post {
-        complete {
-          "OK"
-        }
-      }
-    } ~
+  path("") {
+    get { complete("What's up bro?!") }
+  } ~
   pathPrefix("slap") {
     pathPrefix(Segment) { from =>
       pathPrefix(Segment) { to =>
@@ -56,11 +47,12 @@ trait MyService extends HttpService with SlapServices {
           val fU = User(from.toString, None, None)
           val tU = User(to.toString, None, None)
 
-          for {
-            r  <- slapper ? (tU, fU, jerk)
+          val resp: Future[Any] = for {
+            r  <- userSupe ? Slap(tU, jerk, fU)
           } yield r
 
-          complete("OK")
+          val out = Await.result(resp, 10 seconds)
+          complete(out.toString)
           //complete(s"$from slapped $to")
         }
       }
@@ -83,12 +75,26 @@ trait MyService extends HttpService with SlapServices {
       }
     }
   } ~
-  path("users") {
-    val contact, name, appleId = "1"
+  pathPrefix("users") {
+    path(Segment) { contact =>
+      implicit val timeout = Timeout(3 seconds)
+      val user = User(contact, None, None)
+      val user1 = Await.result((userSupe ? user).mapTo[User], 3 seconds)
+      complete(user1.toString)
+    }
+  } ~
+  pathPrefix("users") { //@"%@/user/%@/%@/%@", contact, name, deviceToken
 
-    implicit val timeout = Timeout(3 seconds)
-    val user = User(contact,Some(name), Some(appleId))
-    userSupe ? user
-    complete("OK")
+    pathPrefix(Segment) { contact =>
+      pathPrefix(Segment) { name =>
+        path(Segment) { appleId =>
+          implicit val timeout = Timeout(3 seconds)
+          val user = User(contact,Some(name), Some(appleId))
+          val user1 = Await.result((userSupe ? user).mapTo[User], 3 seconds)
+          complete(user1.toString)
+        }
+      }
+    }
   }
+
 }

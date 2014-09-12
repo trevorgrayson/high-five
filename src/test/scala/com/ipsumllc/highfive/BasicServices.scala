@@ -5,6 +5,7 @@ import spray.testkit.Specs2RouteTest
 import spray.http._
 import StatusCodes._
 import com.example.MyService
+import com.ipsumllc.highfive.users.User
 
 /**
  * Created by tgrayson on 9/1/14.
@@ -23,23 +24,50 @@ class BasicServices extends Specification
   "highfive.ipsumllc.com" should {
 
     "register an apple id" in {
-      Post("/users") ~> myRoute ~> check {
+      val contact = "8605559759"
+      val name = "paul"
+      val appleId = "1234567890"
+
+      register(contact,name, appleId)
+
+      Get(s"/users/$contact") ~> myRoute ~> check {
         status === OK
+        responseAs[String] === User(contact,Some(name),Some(appleId)).toString
       }
     }
 
-//    "send a slap to someone who is not registered" in {
-//      //Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
-//      Post(s"/slap/$fromContact/$contact/$intensity") ~> myRoute ~> check {
-//        status === OK
-//      }
-//    }
+    "send a slap to someone who is not registered" in {
+      //Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
+      Post(s"/slap/$fromContact/$contact/$intensity") ~> myRoute ~> check {
+        status === OK
+        responseAs[String] === "NOT_REGISTERED"
+      }
+    }
 
-//    "send a slap to someone who is registered" in {
-//      pending
-//      Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
-//        status === OK
-//      }
-//    }
+    "send a slap to someone who is registered" in {
+      val contact = "8605559759"
+      val name = "paul"
+      val appleId = "1234567890"
+
+      register(contact,name, appleId)
+      register("2123138080",name, appleId)
+
+      Post(s"/slap/$contact/$contact/$intensity") ~> myRoute ~> check {
+        status === OK
+        responseAs[String] === "OK"
+      }
+    }
+
   }
+
+  def register(contact: String = "8603849749", name: String = "tre", appleId: String = "123567890" ) {
+    Post(s"/users/$contact/$name/$appleId") ~> myRoute ~> check {
+      status === OK
+      responseAs[String] === User(contact,Some(name),Some(appleId)).toString
+    }
+  }
+
+//  def slap(fromContact: String = fromContact, contact: String = contact, intensity: Double = intensity) {
+//
+//  }
 }

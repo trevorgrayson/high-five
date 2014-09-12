@@ -15,6 +15,10 @@ trait Slapper  {
 
   val domain = "http://ipsumllc.com/hi5/"
 
+  def invite(m: Slap) {
+
+  }
+
   def sendSlap(m: Slap) {
     request(m).responseCode
 //    val result = Http.postData("http://example.com/url", """{"id":"12","json":"data"}""")
@@ -39,4 +43,19 @@ trait Slapper  {
 //    param("from", m.from.name).
 //    param("ferocity", m.intensity.toString).
 //    param("to", m.to.contact)
+}
+
+class SlapActor extends Actor with Slapper {
+  def receive = {
+    case slap@Slap(to, intensity, from) => {
+      if( to.appleId != None ) {
+        println("A SUCCESS: " + slap)
+        sendSlap( slap )
+        sender ! "OK"
+      } else {
+        println("A WHO IS THIS GUY?" )
+        sender ! "NOT_REGISTERED"
+      }
+    }
+  }
 }

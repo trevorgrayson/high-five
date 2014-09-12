@@ -2,6 +2,7 @@ package com.ipsumllc.highfive.users
 
 
 import akka.actor.{Props, ActorRef, Actor}
+import com.ipsumllc.highfive.slappers.Slap
 
 /**
  * Created by tgrayson on 8/21/14.
@@ -12,7 +13,9 @@ class UserSupe extends Actor {
   var users = Map.empty[String, ActorRef]
 
   def receive = {
-    case u: User => getUserActor(u) forward u
+    case m @ (to: User, from: User, intensity: Double) => self.tell(Slap(to, intensity, from), sender)
+    case m : Slap => getUserActor(m.to) forward m
+    case u:  User => getUserActor(u) forward u
     case msg@Update(u: User) => getUserActor(u) forward msg
   }
 
@@ -21,10 +24,9 @@ class UserSupe extends Actor {
 
     users.getOrElse(id, {
       users = users ++ Map(id -> context.actorOf(
-        Props(new UserActor(u)), u.name)
+        Props(new UserActor(u)), u.contact)
       )
     })
-
     users.getOrElse(id, throw new Exception("NUTS!"))
   }
 }
