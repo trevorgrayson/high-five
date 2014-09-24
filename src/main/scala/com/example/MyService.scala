@@ -4,7 +4,7 @@ import akka.actor.{Actor}
 import spray.routing._
 import spray.http._
 import MediaTypes._
-import com.ipsumllc.highfive.users.User
+import com.ipsumllc.highfive.users.{NewUser, User}
 import com.ipsumllc.highfive.services.SlapServices
 import akka.util.Timeout
 
@@ -39,6 +39,12 @@ trait MyService extends HttpService with SlapServices {
   path("") {
     get { complete("What's up bro?!") }
   } ~
+  pathPrefix("invite") {
+    path(Segment) { invite =>
+      val resp = Await.result( userSupe ? NewUser(invite), 3 seconds)
+      complete( resp.toString )
+    }
+  } ~
   pathPrefix("slap") {
     pathPrefix(Segment) { from =>
       pathPrefix(Segment) { to =>
@@ -53,7 +59,6 @@ trait MyService extends HttpService with SlapServices {
 
           val out = Await.result(resp, 10 seconds)
           complete(out.toString)
-          //complete(s"$from slapped $to")
         }
       }
     }

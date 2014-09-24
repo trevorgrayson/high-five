@@ -20,7 +20,7 @@ trait Slapper  {
   }
 
   def sendSlap(m: Slap) {
-    request(m).responseCode
+    println( "Slap Response: " + request(m).responseCode )
 //    val result = Http.postData("http://example.com/url", """{"id":"12","json":"data"}""")
 //      .header("Content-Type", "application/json")
 //      .header("Charset", "UTF-8")
@@ -29,16 +29,19 @@ trait Slapper  {
   }
 
   def request(m: Slap) = {
-    val http = Http(domain).
-      param("id", m.to.contact).
+    var http = Http(domain).
+      param("to", m.to.contact).
+      param("from", m.from.contact).
       param("name", m.from.name).
       param("jerk", m.intensity.toString)
 
     if( m.to.appleId != None ) {
-      http.param("appleId", m.to.appleId.get)
+      http = http.param("appleId", m.to.appleId.get)
     } else {
       http
     }
+    println("URL:" + http.getUrl.toString)
+    http
   }
 //    param("from", m.from.name).
 //    param("ferocity", m.intensity.toString).
@@ -49,11 +52,13 @@ class SlapActor extends Actor with Slapper {
   def receive = {
     case slap@Slap(to, intensity, from) => {
       if( to.appleId != None ) {
-        println("A SUCCESS: " + slap)
-        sendSlap( slap )
+        //not waiting to see if slap succeeds
         sender ! "OK"
+        println("Attempting Slap!: " + slap)
+        sendSlap( slap )
+
       } else {
-        println("A WHO IS THIS GUY?" )
+        println("A WHO IS THIS GUY?")
         sender ! "NOT_REGISTERED"
       }
     }

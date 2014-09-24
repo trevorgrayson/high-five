@@ -24,7 +24,7 @@ class UserActor(var state: User) extends /*Persistent*/Actor  {
 
   val receive/*Command*/: Receive = {
     case WhoAreYou => sender ! state
-    case Update(u:User) => state = u
+    case Update(u:User) => state = u; sender ! state
     case user: User => { //optimistically updating, why?
       if(state._name == None || state.appleId == None) {
         val appleId = if( user.appleId != None ) {

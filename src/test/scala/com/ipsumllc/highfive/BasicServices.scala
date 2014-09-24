@@ -23,6 +23,12 @@ class BasicServices extends Specification
 
   "highfive.ipsumllc.com" should {
 
+    "invite" in {
+      invite()
+
+
+    }
+
     "register an apple id" in {
       val contact = "8605559759"
       val name = "paul"
@@ -40,11 +46,12 @@ class BasicServices extends Specification
       //Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
       Post(s"/slap/$fromContact/$contact/$intensity") ~> myRoute ~> check {
         status === OK
-        responseAs[String] === "NOT_REGISTERED"
+        //responseAs[String] === "NOT_REGISTERED"
       }
     }
 
     "send a slap to someone who is registered" in {
+      pending
       val contact = "8605559759"
       val name = "paul"
       val appleId = "1234567890"
@@ -58,6 +65,15 @@ class BasicServices extends Specification
       }
     }
 
+  }
+
+  def invite(contact: String = "8603849759") = {
+    val hex = contact.toLong.toHexString
+    println("HEX INPUT:" + hex)
+    Post(s"/invite/$hex") ~> myRoute ~> check {
+      status === OK
+      responseAs[String] === User(contact, None, None).toString
+    }
   }
 
   def register(contact: String = "8603849749", name: String = "tre", appleId: String = "123567890" ) {

@@ -1,18 +1,26 @@
 package com.ipsumllc.highfive.users
 
 
+import java.lang.Long._
 import akka.actor.{Props, ActorRef, Actor}
 import com.ipsumllc.highfive.slappers.Slap
+import scalaj.http.Base64
 
 /**
  * Created by tgrayson on 8/21/14.
  * Users exist just to complete requests.
  * Send in a partial user, get the rest.
  */
+case class NewUser(invite: String)
 class UserSupe extends Actor {
   var users = Map.empty[String, ActorRef]
 
   def receive = {
+    case m @ NewUser(invite) => {
+      val contact = parseLong(invite, 16).toString
+      println(s"Decoded String is: $contact")
+      self.tell(User(contact, None, None), sender)
+    }
     case m @ (to: User, from: User, intensity: Double) => self.tell(Slap(to, intensity, from), sender)
     case m : Slap => getUserActor(m.to) forward m
     case u:  User => getUserActor(u) forward u
