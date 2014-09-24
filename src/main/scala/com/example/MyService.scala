@@ -89,15 +89,20 @@ trait MyService extends HttpService with SlapServices {
     }
   } ~
   pathPrefix("users") { //@"%@/user/%@/%@/%@", contact, name, deviceToken
-
-    pathPrefix(Segment) { contact =>
-      pathPrefix(Segment) { name =>
-        path(Segment) { appleId =>
+    pathPrefix(Segment) { appleId =>
+      pathPrefix(Segment) { contact =>
+        path(Segment) { name =>
           implicit val timeout = Timeout(3 seconds)
           val user = User(contact,Some(name), Some(appleId))
           val user1 = Await.result((userSupe ? user).mapTo[User], 3 seconds)
           complete(user1.toString)
         }
+      } ~
+      path(Segment) { contact =>
+        implicit val timeout = Timeout(3 seconds)
+        val user = User(contact, None, Some(appleId))
+        val user1 = Await.result((userSupe ? user).mapTo[User], 3 seconds)
+        complete(user1.toString)
       }
     }
   }

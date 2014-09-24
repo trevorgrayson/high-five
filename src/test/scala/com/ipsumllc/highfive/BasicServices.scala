@@ -42,6 +42,18 @@ class BasicServices extends Specification
       }
     }
 
+    "partially register" in {
+      val contact = "1029384756"
+      val appleId = "123AH4567890"
+
+      partialRegister(contact, appleId)
+
+      Get(s"/users/$contact") ~> myRoute ~> check {
+        status === OK
+        responseAs[String] === User(contact,None,Some(appleId)).toString
+      }
+    }
+
     "send a slap to someone who is not registered" in {
       //Post(s"/$fromContact/slaps/$contact") ~> myRoute ~> check {
       Post(s"/slap/$fromContact/$contact/$intensity") ~> myRoute ~> check {
@@ -77,9 +89,20 @@ class BasicServices extends Specification
   }
 
   def register(contact: String = "8603849749", name: String = "tre", appleId: String = "123567890" ) {
-    Post(s"/users/$contact/$name/$appleId") ~> myRoute ~> check {
+    Post(s"/users/$appleId/$contact/$name") ~> myRoute ~> check {
       status === OK
       responseAs[String] === User(contact,Some(name),Some(appleId)).toString
+    }
+  }
+
+  def partialRegister(contact: String = "8603849749", appleId: String = "123567890", name: String = "" ) {
+    var url = s"/users/$appleId/$contact"
+
+    if( !name.isEmpty ) url = url + "/" + name
+
+    Post(url) ~> myRoute ~> check {
+      status === OK
+      responseAs[String] === User(contact,None,Some(appleId)).toString
     }
   }
 
