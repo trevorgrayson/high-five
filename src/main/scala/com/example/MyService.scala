@@ -39,10 +39,30 @@ trait MyService extends HttpService with SlapServices {
   path("") {
     get { complete("What's up bro?!") }
   } ~
-  pathPrefix("invite") {
+  pathPrefix("register") {
     path(Segment) { invite =>
       val resp = Await.result( userSupe ? NewUser(invite), 3 seconds)
       complete( resp.toString )
+    }
+  } ~
+  pathPrefix("invite") {
+    path(Segment) { invite =>
+      val inviteUrl = s"hi5://invite/$invite"
+      complete(
+<html>
+  <head>
+    <title>Welcome to the party.</title>
+  </head>
+  <body>
+    <h1>Nooo way!</h1>
+    <p>You made it bro.  You're about to significantly increased your high five radius.</p>
+    <p>Just a few more quick steps...</p>
+    <ol>
+      <li>Download the App. [You must know Trevor]</li>
+      <li><a href={inviteUrl}>Accept this invitation</a>. (You must touch from the device, and the app must be installed.)</li>
+    </ol>
+  </body>
+</html>)
     }
   } ~
   pathPrefix("slap") {
