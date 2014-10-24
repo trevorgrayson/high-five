@@ -6,6 +6,7 @@ import spray.http._
 import StatusCodes._
 import com.example.MyService
 import com.ipsumllc.highfive.users.User
+import sun.misc.{BASE64Decoder, BASE64Encoder}
 
 /**
  * Created by tgrayson on 9/1/14.
@@ -79,10 +80,21 @@ class BasicServices extends Specification
 
   }
 
+//  "decode base64" in {
+//    val contact = "8603849759"
+//    val i = contact.toLong
+//    val encoded = (new BASE64Encoder()).encode(Array(i.toByte))
+//    println("ENCODED:" + encoded)
+//    val decoded = (new BASE64Decoder()).decodeBuffer(encoded)
+//    println("DECODED" + decoded)
+//
+//    decoded.toString === contact
+//  }
+
   def invite(contact: String = "8603849759") = {
     val hex = contact.toLong.toHexString
     println("HEX INPUT:" + hex)
-    Post(s"/invite/$hex") ~> myRoute ~> check {
+    Post(s"/register/$hex") ~> myRoute ~> check {
       status === OK
       responseAs[String] === User(contact, None, None).toString
     }

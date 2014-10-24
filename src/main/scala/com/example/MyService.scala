@@ -11,6 +11,7 @@ import akka.util.Timeout
 import scala.concurrent.{Future, Await, ExecutionContext}
 import ExecutionContext.Implicits.global
 import com.ipsumllc.highfive.slappers.Slap
+import com.typesafe.config.ConfigFactory
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
@@ -35,6 +36,10 @@ trait MyService extends HttpService with SlapServices {
   import akka.pattern.ask
   implicit val timeout = Timeout(3 seconds)
 
+  val config = ConfigFactory.load()
+  val inviteUrl = config.getString("links.invite")
+  val download  = config.getString("links.download")
+
   val myRoute =
   path("") {
     get { complete("What's up bro?!") }
@@ -46,20 +51,25 @@ trait MyService extends HttpService with SlapServices {
     }
   } ~
   pathPrefix("invite") {
-    path(Segment) { invite =>
-      val inviteUrl = s"hi5://invite/$invite"
+    path(Segment) { inviteCode =>
       complete(
-<html>
+<html style="width: 320px">
   <head>
-    <title>Welcome to the party.</title>
+    <title>High Five!!</title>
   </head>
-  <body>
-    <h1>Nooo way!</h1>
-    <p>You made it bro.  You're about to significantly increased your high five radius.</p>
+  <body style="width:300px;margin: 0 auto">
+    <h1>You made it bro.</h1>
+    <p>You're about to significantly increased your <strong>high five</strong> radius.</p>
     <p>Just a few more quick steps...</p>
     <ol>
-      <li>Download the App. [You must know Trevor]</li>
-      <li><a href={inviteUrl}>Accept this invitation</a>. (You must touch from the device, and the app must be installed.)</li>
+      <li>
+        <a href={download}>Download the App</a><br/>
+        This link will only work for you if you have been invited.
+      </li>
+      <li>
+        <a href={inviteUrl + inviteCode}>Accept this invitation</a><br/>
+        You must touch from the device, and the app must be installed.
+      </li>
     </ol>
   </body>
 </html>)
