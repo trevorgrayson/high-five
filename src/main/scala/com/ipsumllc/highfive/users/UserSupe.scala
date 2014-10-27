@@ -4,7 +4,7 @@ package com.ipsumllc.highfive.users
 import java.lang.Long._
 import akka.actor.{Props, ActorRef, Actor}
 import com.ipsumllc.highfive.slappers.Slap
-import scalaj.http.Base64
+//import scalaj.http.Base64
 
 /**
  * Created by tgrayson on 8/21/14.

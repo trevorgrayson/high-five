@@ -22,26 +22,31 @@ class UserSpec extends Specification
 
   "UserActor" should {
 
-    implicit val timeout = Timeout(1.0 seconds)
-    val contact = "860384759"
+    implicit val timeout = Timeout(5.0 seconds)
+    val contact = "8603849759"
     val user = User(contact, None, None)
 
     "create a user" in {
-      val ua = TestActorRef(Props(new UserActor(user)))
-      val result = Await.result(ua ? WhoAreYou, 1.0 seconds).asInstanceOf[User]
+      val ua = system.actorOf(Props(new UserActor(user)))
+      val result = Await.result(ua ? WhoAreYou, 5.0 seconds).asInstanceOf[User]
+
+      ua ! DELETE
 
       result.contact must be(contact)
       result.name must be(contact)
       result.appleId must be(None)
+
     }
 
     "update a user" in {
       val name = "tre"
       val appleId = "123567890"
-      val ua = TestActorRef(Props(new UserActor(user)))
+      val ua = system.actorOf(Props(new UserActor(user)))
       val user1 = User(contact, Some(name),Some(appleId))
-      Await.result(ua ? user1, 1.0 seconds)
-      val result = Await.result(ua ? WhoAreYou, 1.0 seconds).asInstanceOf[User]
+      Await.result(ua ? user1, 5.0 seconds)
+      val result = Await.result(ua ? WhoAreYou, 5.0 seconds).asInstanceOf[User]
+
+      ua ! DELETE
 
       result.contact     must be(contact)
       result.name        must be(name)
