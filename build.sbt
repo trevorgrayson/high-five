@@ -29,6 +29,7 @@ libraryDependencies ++= {
   )
 }
 
+//test in assembly := {}
 //jarName in assembly := "blah.jar"
 
 Revolver.settings

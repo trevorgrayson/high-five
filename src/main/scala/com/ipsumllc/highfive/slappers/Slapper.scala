@@ -30,8 +30,8 @@ trait Slapper  {
 
   def request(m: Slap) = {
     var http = Http(domain).
-      param("to", m.to.contact).
-      param("from", m.from.contact).
+      param("to", m.to.contact.string).
+      param("from", m.from.contact.string).
       param("name", m.from.name).
       param("jerk", m.intensity.toString)
 
@@ -43,9 +43,6 @@ trait Slapper  {
     println("URL:" + http.getUrl.toString)
     http
   }
-//    param("from", m.from.name).
-//    param("ferocity", m.intensity.toString).
-//    param("to", m.to.contact)
 }
 
 class SlapActor extends Actor with Slapper {
@@ -61,6 +58,7 @@ class SlapActor extends Actor with Slapper {
         println("A WHO IS THIS GUY?")
         sender ! "NOT_REGISTERED"
       }
+      context.stop(self)
     }
   }
 }

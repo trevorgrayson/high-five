@@ -15,16 +15,18 @@ case class Update(u: User)
 case object WhoAreYou
 case object DELETE
 
-case class User( contact: String, _name: Option[String], appleId: Option[String]) {
+case class Contact(string: String)
+case class User( contact: Contact, _name: Option[String], appleId: Option[String]) {
   def name = {
-    _name.getOrElse(contact)
+    _name.getOrElse(contact.string)
   }
 }
 
-class UserActor(var state: User) extends PersistentActor  {
+class UserActor(var state: User) extends Actor {//PersistentActor  {
   def persistenceId = s"user-${state.contact}"
 
-  val receiveCommand: Receive = {
+  //val receiveCommand: Receive = {
+  def receive = {
     case WhoAreYou => sender ! state
     case Update(u:User) => state = u; sender ! state
     case user: User => { //optimistically updating, why?
@@ -46,10 +48,10 @@ class UserActor(var state: User) extends PersistentActor  {
       }
 
       sender ! state
+      //persist(user)(updateState)
     }
-    persist(user)(updateState)
     case s: Slap => println("SLAP:" + state);slapWorker forward Slap(state, s.intensity, s.from)
-    case DELETE => deleteMessages(999999)
+    //case DELETE => deleteMessages(999999)
     //case "snap" => saveSnapshot(state)
     case "print" => println(state)
   }

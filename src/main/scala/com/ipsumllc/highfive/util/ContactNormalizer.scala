@@ -1,9 +1,10 @@
 package com.ipsumllc.highfive.util
 
-/**
- * Created by tgrayson on 8/18/14.
- */
+import com.ipsumllc.highfive.users.Contact
 
+/**
+ * Created by tgrayson on 2/16/15.
+ */
 object ContactNormalizer {
   val BasicFormat = "^[1]{0,1}([0-9]{10})$".r
   val EmailFormat = "^(\\d{10,11})@.*".r
@@ -27,4 +28,10 @@ object ContactNormalizer {
   def numericsOnly(s: String) = s.replaceAll("[^\\d.]","")
 
   class InvalidTelephone(m: String) extends Exception(s"Invalid Telephone String: $m")
+}
+
+trait ContactNormalization {
+  implicit def string2Contact(s: String): Contact = Contact(
+    ContactNormalizer.telephone(s)
+  )
 }

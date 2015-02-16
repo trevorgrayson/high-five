@@ -12,6 +12,6 @@ trait SlapServices {
   this: HttpService =>
 
   val slapper  = actorRefFactory.actorOf(Props(new SlapMaster), "slapper")
-  val userSupe = actorRefFactory.actorOf(Props(new UserSupe),"userSupe")
+  val userSupe = actorRefFactory.actorOf(Props(new UserSupe),  "userSupe")
 
 }

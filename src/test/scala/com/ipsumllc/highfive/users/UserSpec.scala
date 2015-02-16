@@ -10,11 +10,13 @@ import scala.concurrent.duration._
 import akka.util.Timeout
 import com.ipsumllc.highfive.services.SlapServices
 import spray.routing.HttpService
+import com.ipsumllc.highfive.util.ContactNormalization
 
 /**
 * Created by tgrayson on 8/18/14.
 */
 class UserSpec extends Specification
+  with ContactNormalization
 //  with SlapServices
   {
   implicit val system = ActorSystem("UserSpec")
@@ -23,17 +25,17 @@ class UserSpec extends Specification
   "UserActor" should {
 
     implicit val timeout = Timeout(5.0 seconds)
-    val contact = "8603849759"
+    val contact: Contact = "8603849759"
     val user = User(contact, None, None)
 
     "create a user" in {
       val ua = system.actorOf(Props(new UserActor(user)))
-      val result = Await.result(ua ? WhoAreYou, 5.0 seconds).asInstanceOf[User]
+      val result = Await.result(ua ? WhoAreYou, 10.0 seconds).asInstanceOf[User]
 
       ua ! DELETE
 
       result.contact must be(contact)
-      result.name must be(contact)
+      result.name must be(contact.string)
       result.appleId must be(None)
 
     }
@@ -43,7 +45,7 @@ class UserSpec extends Specification
       val appleId = "123567890"
       val ua = system.actorOf(Props(new UserActor(user)))
       val user1 = User(contact, Some(name),Some(appleId))
-      Await.result(ua ? user1, 5.0 seconds)
+      Await.result(ua ? user1, 10.0 seconds)
       val result = Await.result(ua ? WhoAreYou, 5.0 seconds).asInstanceOf[User]
 
       ua ! DELETE
