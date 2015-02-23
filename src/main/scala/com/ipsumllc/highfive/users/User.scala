@@ -3,7 +3,7 @@ package com.ipsumllc.highfive.users
 import akka.actor.{Props, Actor}
 import com.ipsumllc.highfive.slappers.{SlapActor, Slapper, Slap}
 import scalaj.http.Http
-import akka.persistence.PersistentActor
+//import akka.persistence.PersistentActor
 
 //import akka.actor._
 //import akka.persistence._

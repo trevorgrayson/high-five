@@ -7,14 +7,17 @@
 //import akka.testkit.TestActorRef
 //import akka.actor.ActorSystem
 //import akka.util.Timeout
+//import com.ipsumllc.highfive.util.ContactNormalization
+//import scala.concurrent.duration._
 //
 ///**
 //* Created by tgrayson on 8/28/14.
 //*/
-//class UserSupeSpec extends Specification {
+//class UserSupeSpec extends Specification
+//  with ContactNormalization {
 //
 //  implicit val system = ActorSystem("UserSupeSpec")
-//  implicit val timeout = Timeout(3000)
+//  implicit val timeout = Timeout(3000 microseconds)
 //  val supe = TestActorRef[UserSupe]
 //
 //  "UserSupe" should {

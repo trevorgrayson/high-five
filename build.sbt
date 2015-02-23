@@ -22,10 +22,10 @@ libraryDependencies ++= {
     "com.typesafe.akka"   %%  "akka-actor"    % akkaV,
     "com.typesafe.akka"   %%  "akka-testkit"  % akkaV   % "test",
     "org.specs2"          %%  "specs2"        % "2.2.3" % "test",
-    "org.scalaj"          %% "scalaj-http"    % "0.3.16",
-    "com.typesafe.akka"   %% "akka-persistence-experimental" % "2.4-SNAPSHOT",
-    //"org.fusesource.leveldbjni" % "leveldbjni-all" % "1.7"
-    "com.github.krasserm" %% "akka-persistence-cassandra" % "0.3.4"
+    "org.scalaj"          %% "scalaj-http"    % "0.3.16"
+    //,"com.typesafe.akka"   %% "akka-persistence-experimental" % "2.4-SNAPSHOT"
+    //"org.fusesource.leveldbjni" % "leveldbjni-all" % "1.7",
+    //,"com.github.krasserm" %% "akka-persistence-cassandra" % "0.3.4"
   )
 }
 
