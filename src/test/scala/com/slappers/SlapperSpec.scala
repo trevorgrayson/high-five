@@ -45,7 +45,7 @@ class SlapperSpec extends Specification
     val request = slapr.request(slap)
     val url = request.getUrl.toString
 
-    val expected = s"${slapr.domain}?" +
+    val expected = s"${Slapper.domain}?" +
       s"from=${from.name}" +
       s"&ferocity=${ferocity}" +
       s"&to=${to.contact}"
