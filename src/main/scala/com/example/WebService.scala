@@ -16,8 +16,8 @@ import com.ipsumllc.highfive.util.ContactNormalization
 
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
-class MyServiceActor extends Actor
-  with MyService
+class WebServiceActor extends Actor
+  with WebService
   with SlapServices {
 
   // the HttpService trait defines only one abstract member, which
@@ -31,7 +31,7 @@ class MyServiceActor extends Actor
 }
 
 // this trait defines our service behavior independently from the service actor
-trait MyService extends HttpService with SlapServices
+trait WebService extends HttpService with SlapServices
   with ContactNormalization {
   //MEHHH can we not be asking?
   import scala.concurrent.duration._

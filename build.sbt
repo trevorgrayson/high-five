@@ -16,17 +16,16 @@ libraryDependencies ++= {
   val akkaV = "2.1.4"
   val sprayV = "1.1.1"
   Seq(
-    "io.spray"            %   "spray-can"     % sprayV,
-    "io.spray"            %   "spray-routing" % sprayV,
-    "io.spray"            %   "spray-testkit" % sprayV  % "test",
-    "com.typesafe.akka"   %%  "akka-actor"    % akkaV,
-    "com.typesafe.akka"   %%  "akka-testkit"  % akkaV   % "test",
-    "org.specs2"          %%  "specs2"        % "2.2.3" % "test",
-    "org.scalaj"          %% "scalaj-http"    % "0.3.16",
+    "io.spray"            %  "spray-can"        % sprayV,
+    "io.spray"            %  "spray-routing"    % sprayV,
+    "io.spray"            %  "spray-testkit"    % sprayV  % "test",
+    "com.typesafe.akka"   %% "akka-actor"       % akkaV,
+    "com.typesafe.akka"   %% "akka-testkit"     % akkaV   % "test",
+    //"com.typesafe.akka"   %% "akka-persistence" % "2.4.1",
+    "org.specs2"          %% "specs2"           % "2.2.3" % "test",
+    "org.scalaj"          %% "scalaj-http"      % "0.3.16",
     "com.github.fernandospr" % "javapns-jdk16" % "2.2.1"
-    //,"com.typesafe.akka"   %% "akka-persistence-experimental" % "2.4-SNAPSHOT"
     //"org.fusesource.leveldbjni" % "leveldbjni-all" % "1.7",
-    //,"com.github.krasserm" %% "akka-persistence-cassandra" % "0.3.4"
   )
 }
 

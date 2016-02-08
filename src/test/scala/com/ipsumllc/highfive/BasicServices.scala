@@ -4,7 +4,7 @@ import org.specs2.mutable.Specification
 import spray.testkit.Specs2RouteTest
 import spray.http._
 import StatusCodes._
-import com.example.MyService
+import com.example.WebService
 import com.ipsumllc.highfive.users.{Contact, User}
 //import sun.misc.{BASE64Decoder, BASE64Encoder}
 
@@ -12,7 +12,7 @@ import com.ipsumllc.highfive.users.{Contact, User}
 * Created by tgrayson on 9/1/14.
 */
 class BasicServices extends Specification
-  with Specs2RouteTest with MyService {
+  with Specs2RouteTest with WebService {
 
   def actorRefFactory = system
 

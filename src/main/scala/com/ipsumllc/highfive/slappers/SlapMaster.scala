@@ -1,11 +1,12 @@
 package com.ipsumllc.highfive.slappers
 
-import akka.actor.{Props, Actor}
-import com.ipsumllc.highfive.users.{UserActor, User}
-import com.ipsumllc.highfive.services.SlapServices
+import akka.actor.Actor
+import com.ipsumllc.highfive.users.User
 
 /**
  * Created by tgrayson on 7/23/14.
+ * Manages SlapActor workers.  This should be registering workers, and
+ * handling error conditions.  Presently this is just fire and forget.
  */
 case class Slap( to: User, intensity: Double, from: User )
 
