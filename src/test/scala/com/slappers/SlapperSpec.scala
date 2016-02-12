@@ -43,7 +43,7 @@ class SlapperSpec extends Specification
     pending
     val slap = Slap(to, ferocity, from)
     val request = slapr.request(slap)
-    val url = request.getUrl.toString
+    val url: String = request.toString
 
     val expected = s"${Slapper.domain}?" +
       s"from=${from.name}" +

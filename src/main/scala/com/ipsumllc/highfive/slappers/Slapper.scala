@@ -1,13 +1,16 @@
 package com.ipsumllc.highfive.slappers
 
 import akka.actor.{PoisonPill, Actor}
-import scalaj.http.Http
-import com.ipsumllc.highfive.slappers.Slapper.Ok
+import org.json.JSONObject
+import spray.can.Http
+import spray.http.{Uri, HttpRequest}
+import spray.json._
+import DefaultJsonProtocol._
 import javapns.Push
-import scala.io.Source
 import javapns.notification.PushNotificationPayload
 import javapns._
-import scala.util.parsing.json.JSONObject
+import spray.http._
+import HttpMethods._
 
 /**
  * Created by tgrayson on 7/23/14.
@@ -56,41 +59,40 @@ trait Slapper  {
     //TODO consider push queue https://code.google.com/p/javapns/wiki/PushNotificationAdvanced
   }
 
-  def jsonPayload(m: Slap): JSONObject = {
+  def jsonPayload(m: Slap): String = {
     val message = s"${m.from.name} High Five!"
     val sound = "highfive-0.m4a"
 
-    JSONObject( Map(
-      "aps"  -> JSONObject( Map(
+    Map(
+      "aps"  -> Map[String,String](
         "alert" -> message,
         "sound" -> sound,
-        "badge" -> 1
-      ) ),
-      "slap" -> JSONObject( Map(
+        "badge" -> 1.toString
+      ).toJson,
+      "slap" -> Map(
           "id"   -> m.from.contact.string,
           "from" -> m.from.name,
           "to"   -> m.to.contact.string,
           "name" -> m.to.name,
           "jerk" -> m.intensity.toString
-        ) )
-      )
-    )
+      ).toJson
+    ).toJson.toString
   }
 
   def request(m: Slap) = {
-    var http = Http(domain).
-      param("to", m.to.contact.string).
-      param("from", m.from.contact.string).
-      param("name", m.from.name).
-      param("jerk", m.intensity.toString)
+    var uri = Uri(domain)
+    uri.withQuery(Map(
+      "to" -> m.to.contact.string,
+      "from" -> m.from.contact.string,
+      "name" -> m.from.name,
+      "jerk" -> m.intensity.toString
+    ))
 
     if( m.to.appleId != None ) {
-      http = http.param("appleId", m.to.appleId.get)
+      uri.withQuery(Map("appleId" -> m.to.appleId.get))
     } else {
-      http
+      uri
     }
-    println("URL:" + http.getUrl.toString)
-    http
   }
 }
 
