@@ -5,7 +5,7 @@ organization  := "com.ipsumllc"
 
 version       := "0.1"
 
-scalaVersion  := "2.11.5"
+scalaVersion  := "2.11.1"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
@@ -29,14 +29,12 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test",
     "io.spray" %% "spray-testkit" % sprayVersion % "test",
     "org.specs2" %% "specs2" % "2.3.13" % "test",
+    "com.typesafe.akka"   %% "akka-persistence" % "2.4.1",
+    "org.iq80.leveldb"            % "leveldb"          % "0.7",
+    "org.fusesource.leveldbjni"   % "leveldbjni-all"   % "1.8",
     "com.github.fernandospr" % "javapns-jdk16"  % "2.3.1"
   )
 }
-
-
-//   //"com.typesafe.akka"   %% "akka-persistence" % "2.4.1",
-
-//   //"org.fusesource.leveldbjni" % "leveldbjni-all" % "1.7",
 
 //test in assembly := {}
 //jarName in assembly := "blah.jar"

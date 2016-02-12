@@ -1,17 +1,14 @@
 package com.ipsumllc.highfive.users
 
-import akka.actor.{Props, Actor}
+import akka.actor.{Actor, Props}
+import akka.persistence.PersistentActor
 import com.ipsumllc.highfive.slappers.{SlapActor, Slapper, Slap}
-//import scalaj.http.Http
-//import akka.persistence.PersistentActor
-
-//import akka.actor._
-//import akka.persistence._
 
 /**
  * Created by tgrayson on 7/23/14.
  */
 case class Update(u: User)
+case class Event(u: User)
 case object WhoAreYou
 case object DELETE
 
@@ -20,33 +17,49 @@ case class User( contact: Contact, _name: Option[String], appleId: Option[String
   def name = {
     _name.getOrElse(contact.string)
   }
-}
 
-class UserActor(var state: User) extends Actor {//PersistentActor  {
-  def persistenceId = s"user-${state.contact}"
-
-  //val receiveCommand: Receive = {
-  def receive = {
-    case WhoAreYou => sender ! state
-    case Update(u:User) => state = u; sender ! state
-    case user: User => { //optimistically updating, why?
-      if(state._name == None || state.appleId == None) {
-        val appleId = if( user.appleId != None ) {
-          user.appleId
-        } else {
-          state.appleId
-        }
-
-        val _name = if( user.name != None ) {
+  def update(user: User): User = {
+    if(_name == None || appleId == None) {
+      User(
+        contact,
+        if (user.name != None) {
           user._name
         } else {
-          state._name
+          _name
+        },
+        if (user.appleId != None) {
+          user.appleId
+        } else {
+          appleId
         }
+      )
+    } else {
+      this
+    }
+  }
+}
 
-        state = User(state.contact, _name, appleId)
-        println(state)
-      }
+class UserActor(var state: User) extends Actor { //PersistentActor {
+  def persistenceId = s"user-${state.contact}"
 
+  def receiveCommand: Receive = {
+    case Update(u:User) =>
+      //persist(Event(u))
+      state = u
+      sender ! state
+  }
+
+  //def receiveRecover: Receive = {
+  //  case _ =>
+  //}
+
+  def receive = {
+    case WhoAreYou => sender ! state
+    case Update(u:User) =>
+      state = u
+      sender ! state
+    case user: User => { //optimistically updating, why?
+      state = state.update(user)
       sender ! state
       //persist(user)(updateState)
     }
@@ -59,7 +72,7 @@ class UserActor(var state: User) extends Actor {//PersistentActor  {
   def updateState(s: User): Unit =
     state = s
 
-  def slapWorker = (context.actorOf(Props(new SlapActor)))
+  def slapWorker = context.actorOf(Props(new SlapActor))
 
   val receiveRecover: Receive = {
     case user: User  => updateState(user)

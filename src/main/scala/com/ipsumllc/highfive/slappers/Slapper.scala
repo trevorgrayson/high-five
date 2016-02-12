@@ -80,8 +80,7 @@ trait Slapper  {
   }
 
   def request(m: Slap) = {
-    var uri = Uri(domain)
-    uri.withQuery(Map(
+    val uri = Uri(domain).withQuery(Map(
       "to" -> m.to.contact.string,
       "from" -> m.from.contact.string,
       "name" -> m.from.name,
