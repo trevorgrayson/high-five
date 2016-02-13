@@ -39,19 +39,7 @@ case class User( contact: Contact, _name: Option[String], appleId: Option[String
   }
 }
 
-class UserActor(var state: User) extends Actor { //PersistentActor {
-  def persistenceId = s"user-${state.contact}"
-
-  def receiveCommand: Receive = {
-    case Update(u:User) =>
-      //persist(Event(u))
-      state = u
-      sender ! state
-  }
-
-  //def receiveRecover: Receive = {
-  //  case _ =>
-  //}
+class UserActor(var state: User) extends Actor {
 
   def receive = {
     case WhoAreYou => sender ! state
@@ -69,13 +57,6 @@ class UserActor(var state: User) extends Actor { //PersistentActor {
     case "print" => println(state)
   }
 
-  def updateState(s: User): Unit =
-    state = s
-
   def slapWorker = context.actorOf(Props(new SlapActor))
 
-  val receiveRecover: Receive = {
-    case user: User  => updateState(user)
-    //case SnapshotOffer(_, snapshot: User) => state = snapshot
-  }
 }
