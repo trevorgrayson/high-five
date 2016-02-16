@@ -65,7 +65,7 @@ trait Slapper  {
   }
 
   def push(appleId: String, payload: String): Unit = {
-    //service.push(appleId, payload)
+    service.push(appleId, payload)
   }
 
   def jsonPayload(m: Slap): String = {
