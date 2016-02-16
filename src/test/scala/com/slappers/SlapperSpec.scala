@@ -1,7 +1,6 @@
 package com.slappers
 
 import org.specs2.mutable.Specification
-import java.lang.Object
 import com.ipsumllc.highfive.slappers.{Slap, Slapper}
 import com.ipsumllc.highfive.users.{UserActor, User}
 import akka.testkit.TestActorRef
@@ -20,7 +19,7 @@ class SlapperSpec extends Specification
   val slapper = TestActorRef(Props(new UserActor(user) with Slapper {
     var count = 0
 
-    override def sendSlap(m: Slap) {
+    override def push(appleId: String, payload: String): Unit = {
       count += 1
     }
   }))

@@ -13,8 +13,8 @@ class SlapActor extends Actor with Slapper {
     case slap@Slap(to, intensity, from) => {
       if( to.appleId != None ) {
         //not waiting to see if slap succeeds
-        sender ! "OK"
         println("Attempting Slap!: " + slap)
+        sender ! "OK"
         sendSlap( slap )
 
       } else {

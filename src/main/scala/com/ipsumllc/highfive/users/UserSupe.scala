@@ -20,7 +20,7 @@ class UserSupe extends Actor
 
   def receive = {
     case m @ NewUser(invite) => {
-      val contact = parseLong(invite, 16).toString
+      val contact = invite //parseLong(invite, 16).toString
       println(s"Decoded String is: $contact")
       self.tell(User(contact, None, None), sender)
     }

@@ -2,7 +2,7 @@ package com.ipsumllc.highfive.users
 
 import akka.actor.{Actor, Props}
 import akka.persistence.PersistentActor
-import com.ipsumllc.highfive.slappers.{SlapActor, Slapper, Slap}
+import com.ipsumllc.highfive.slappers.{SlapActor, Slap}
 
 /**
  * Created by tgrayson on 7/23/14.
@@ -13,6 +13,7 @@ case object WhoAreYou
 case object DELETE
 
 case class Contact(string: String)
+
 case class User( contact: Contact, _name: Option[String], appleId: Option[String]) {
   def name = {
     _name.getOrElse(contact.string)

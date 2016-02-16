@@ -1,7 +1,7 @@
 package com.ipsumllc.highfive.services
 
-import akka.actor.{Props, Actor}
-import com.ipsumllc.highfive.slappers.{Slapper, SlapMaster}
+import akka.actor.{Props}
+import com.ipsumllc.highfive.slappers.{SlapMaster}
 import com.ipsumllc.highfive.users.UserSupe
 import spray.routing.HttpService
 

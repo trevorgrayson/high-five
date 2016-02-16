@@ -3,7 +3,7 @@
 
 organization  := "com.ipsumllc"
 
-version       := "0.1"
+version       := "0.4"
 
 scalaVersion  := "2.11.1"
 
@@ -32,7 +32,8 @@ libraryDependencies ++= {
     "com.typesafe.akka"   %% "akka-persistence" % "2.4.1",
     "org.iq80.leveldb"            % "leveldb"          % "0.7",
     "org.fusesource.leveldbjni"   % "leveldbjni-all"   % "1.8",
-    "com.github.fernandospr" % "javapns-jdk16"  % "2.3.1"
+    "com.github.fernandospr" % "javapns-jdk16"  % "2.3.1",
+    "com.notnoop.apns" % "apns" % "0.2.3"
   )
 }
 

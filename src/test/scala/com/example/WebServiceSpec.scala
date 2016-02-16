@@ -34,7 +34,6 @@ class WebServiceSpec extends Specification with Specs2RouteTest with WebService 
       val to = "8605559759"
       Post(s"/slap/$from/$to/1.9") ~> myRoute ~> check {
         status === OK
-        //responseAs[String] must contain(s"$from slapped $to")
       }
     }
 

@@ -1,16 +1,9 @@
 package com.ipsumllc.highfive.slappers
 
-import akka.actor.{PoisonPill, Actor}
-import org.json.JSONObject
-import spray.can.Http
-import spray.http.{Uri, HttpRequest}
+import com.notnoop.apns.{ApnsService, APNS}
+import spray.http.Uri
+import spray.json.DefaultJsonProtocol._
 import spray.json._
-import DefaultJsonProtocol._
-import javapns.Push
-import javapns.notification.PushNotificationPayload
-import javapns._
-import spray.http._
-import HttpMethods._
 
 /**
  * Created by tgrayson on 7/23/14.
@@ -21,42 +14,58 @@ import HttpMethods._
 
 object Slapper {
   val domain = "http://ipsumllc.com/hi5/"
-  val phrase = "high5"
-  val p12key = "hi5.p12"
+  val APNSCertPath = "/etc/highfive/hi5.p12"
+  val APNSCertPassword = "high5"
 
   case object Ok
 }
 
 trait Slapper  {
   import Slapper._
-  //config
 
-  def invite(m: Slap) {
+  val service: ApnsService = APNS.newService.withCert(APNSCertPath, APNSCertPassword)
+                               .withSandboxDestination.build
+  val sound = "highfive-0.m4a"
 
-  }
 
   def sendSlap(m: Slap) {
-    val prod = false
 
-    println(jsonPayload(m).toString())
+    val aps = Map(
+      "alert" -> s"${m.from.name} High Five!",
+      "badge" -> 1.toString,
+      "sound" -> "highfive-0.m4a"
+    )
+    val slapFacts = Map(
+      "id"   -> m.from.contact.string,
+      "from" -> m.from.name,
+      "to"   -> m.to.contact.string,
+      "name" -> m.to.name,
+      "jerk" -> m.intensity.toString
+    )
 
-    //println(Push.test(p12key, "high5", true, m.to.appleId.get))
-    //Push.alert(message, p12key, phrase, prod, m.to.appleId.get)
-    val payload = PushNotificationPayload.fromJSON( jsonPayload(m).toString() )
-//    val payload = PushNotificationPayload.complex()
-//    payload.addAlert(message)
-//    payload.addSound(sound)
-//    payload.addBadge(1)
-//    payload.addCustomDictionary( "slap", jsonPayload(m) )
+    val slap = Map(
+      "aps" -> aps,
+      "slap" -> slapFacts
+    )
+    val payload = slap.toJson.toString()
 
+    //val payload: String = APNS.newPayload.alertBody(s"${m.from.name} High Five!") .badge(1) .sound(sound) .customField( "slap", slapJson ).build
 
-//    payload.addCustomDictionary( "from", m.from.name          )
-//    payload.addCustomDictionary( "to", m.to.contact.string    )
-//    payload.addCustomDictionary( "name", m.to.name            )
-//    payload.addCustomDictionary( "jerk", m.intensity.toString )
+    println(payload)
 
-    Push.payload(payload, p12key, phrase, prod, m.to.appleId.get)
+    println(s"attempting to send a slap to ${m.to}")
+
+    m.to.appleId.map {
+      case appleId =>
+        println(s"Sending to: ${appleId}")
+        push(appleId, payload)
+    }
+
     //TODO consider push queue https://code.google.com/p/javapns/wiki/PushNotificationAdvanced
+  }
+
+  def push(appleId: String, payload: String): Unit = {
+    //service.push(appleId, payload)
   }
 
   def jsonPayload(m: Slap): String = {
