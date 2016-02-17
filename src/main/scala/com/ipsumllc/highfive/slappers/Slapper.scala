@@ -17,6 +17,8 @@ object Slapper {
   val APNSCertPath = "/etc/highfive/hi5.p12"
   val APNSCertPassword = "high5"
 
+  val sound = "highfive-0.m4a"
+
   case object Ok
 }
 
@@ -25,8 +27,6 @@ trait Slapper  {
 
   val service: ApnsService = APNS.newService.withCert(APNSCertPath, APNSCertPassword)
                                .withSandboxDestination.build
-  val sound = "highfive-0.m4a"
-
 
   def sendSlap(m: Slap) {
 
@@ -43,15 +43,14 @@ trait Slapper  {
       "jerk" -> m.intensity.toString
     )
 
-    val slap = Map(
+    //APNS.newPayload().alertBody("Can't be simpler than this!").build();
+
+    val payload = Map(
+
       "aps" -> aps,
       "slap" -> slapFacts
-    )
-    val payload = slap.toJson.toString()
 
-    //val payload: String = APNS.newPayload.alertBody(s"${m.from.name} High Five!") .badge(1) .sound(sound) .customField( "slap", slapJson ).build
-
-    println(payload)
+    ).toJson.toString()
 
     println(s"attempting to send a slap to ${m.to}")
 
@@ -65,27 +64,8 @@ trait Slapper  {
   }
 
   def push(appleId: String, payload: String): Unit = {
-    service.push(appleId, payload)
-  }
-
-  def jsonPayload(m: Slap): String = {
-    val message = s"${m.from.name} High Five!"
-    val sound = "highfive-0.m4a"
-
-    Map(
-      "aps"  -> Map[String,String](
-        "alert" -> message,
-        "sound" -> sound,
-        "badge" -> 1.toString
-      ).toJson,
-      "slap" -> Map(
-          "id"   -> m.from.contact.string,
-          "from" -> m.from.name,
-          "to"   -> m.to.contact.string,
-          "name" -> m.to.name,
-          "jerk" -> m.intensity.toString
-      ).toJson
-    ).toJson.toString
+    val response = service.push(appleId, payload)
+    println(response)
   }
 
   def request(m: Slap) = {

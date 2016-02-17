@@ -3,11 +3,13 @@
 
 organization  := "com.ipsumllc"
 
-version       := "0.6"
+version       := "0.7"
 
 scalaVersion  := "2.11.1"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
+
+javacOptions ++= Seq("-source", "1.8")
 
 //resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
 
