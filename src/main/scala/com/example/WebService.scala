@@ -48,8 +48,8 @@ trait WebService extends HttpService with SlapServices
   } ~
   path("register") {
     parameters("invite", "name" ?) { (invite, name) =>
-      println(s"Registering")
-      val response = Await.result( userSupe ? NewUser(invite), 3 seconds)
+      println(s"Registering ${invite} as ${name}")
+      val response = Await.result( userSupe ? NewUser(invite, name), 3 seconds)
       complete( response.toString )
     }
   } ~
