@@ -46,13 +46,22 @@ trait WebService extends HttpService with SlapServices
   path("") {
     get { complete("What's up bro?!") }
   } ~
+  path("register") {
+    parameters("invite", "name" ?) { (invite, name) =>
+      println(s"Registering")
+      val response = Await.result( userSupe ? NewUser(invite), 3 seconds)
+      complete( response.toString )
+    }
+  } ~
   pathPrefix("register") {
     path(Segment) { invite =>
-      val resp = Await.result( userSupe ? NewUser(invite), 3 seconds)
-      complete( resp.toString )
+      println(s"Registering for ${invite}")
+      val response = Await.result( userSupe ? NewUser(invite), 3 seconds)
+      complete( response.toString )
     }
   } ~
   pathPrefix("invite") {
+    // io.Source.fromFile("file.txt").mkString
     path(Segment) { inviteCode =>
       complete(
 <html style="width: 320px">
@@ -65,16 +74,22 @@ trait WebService extends HttpService with SlapServices
     <p>Just a few more quick steps...</p>
     <ol>
       <li>
-        <a href={download}>Download the App</a><br/>
-        This link will only work for you if you have been invited.
+        <h2>Download the App</h2>
+        <p>If you haven't downloaded the app yet, you can do it here.</p>
       </li>
       <li>
-        <a href={inviteUrl + inviteCode}>Accept this invitation</a><br/>
-        You must touch from the device, and the app must be installed.
+        <h2>Accept this invitation</h2>
+        You must accept from your device, and the app must be installed.
+        <form method="GET" action="hi5://invite">
+          <input name="invite" value={inviteCode} type="hidden" />
+          <input name="name" placeholder="Your Name" />
+          <input type="submit" value="Get Slapping"/>
+        </form>
       </li>
     </ol>
   </body>
-</html>)
+</html>
+    )
     }
   } ~
   pathPrefix("slap") {
@@ -85,11 +100,11 @@ trait WebService extends HttpService with SlapServices
           val fU = User(from.toString, None, None)
           val tU = User(to.toString, None, None)
 
-          val resp: Future[Any] = for {
+          val response: Future[Any] = for {
             r  <- userSupe ? Slap(tU, jerk, fU)
           } yield r
 
-          val out = Await.result(resp, 10 seconds)
+          val out = Await.result(response, 10 seconds)
           complete(out.toString)
         }
       }

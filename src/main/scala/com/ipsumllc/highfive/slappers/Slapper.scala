@@ -36,9 +36,9 @@ trait Slapper  {
       "sound" -> "highfive-0.m4a"
     )
     val slapFacts = Map(
-      "id"   -> m.from.contact.string,
+      "id"   -> m.from.contact.string.substring(2),
       "from" -> m.from.name,
-      "to"   -> m.to.contact.string,
+      "to"   -> m.to.contact.string.substring(2),
       "name" -> m.to.name,
       "jerk" -> m.intensity.toString
     )
@@ -52,7 +52,9 @@ trait Slapper  {
 
     ).toJson.toString()
 
-    println(s"attempting to send a slap to ${m.to}")
+    println(m.from)
+    println(m.to)
+    println(s"attempting to send a slap ${payload}")
 
     m.to.appleId.map {
       case appleId =>
@@ -68,19 +70,5 @@ trait Slapper  {
     println(response)
   }
 
-  def request(m: Slap) = {
-    val uri = Uri(domain).withQuery(Map(
-      "to" -> m.to.contact.string,
-      "from" -> m.from.contact.string,
-      "name" -> m.from.name,
-      "jerk" -> m.intensity.toString
-    ))
-
-    if( m.to.appleId != None ) {
-      uri.withQuery(Map("appleId" -> m.to.appleId.get))
-    } else {
-      uri
-    }
-  }
 }
 

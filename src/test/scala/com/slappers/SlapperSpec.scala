@@ -38,17 +38,4 @@ class SlapperSpec extends Specification
     "1" must be("1")
   }
 
-  "Makes correct URL" in {
-    pending
-    val slap = Slap(to, ferocity, from)
-    val request = slapr.request(slap)
-    val url: String = request.toString
-
-    val expected = s"${Slapper.domain}?" +
-      s"from=${from.name}" +
-      s"&ferocity=${ferocity}" +
-      s"&to=${to.contact}"
-
-    url must_== expected
-  }
 }
