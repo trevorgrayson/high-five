@@ -13,17 +13,17 @@ import com.ipsumllc.highfive.util.ContactNormalization
  * Users exist just to complete requests.
  * Send in a partial user, get the rest.
  */
-case class NewUser(invite: String, name:Option[String]=None)
+case class NewUser(invite: String, name:Option[String]=None, deviceId:Option[String]=None)
 
 class UserSupe extends Actor
   with ContactNormalization {
   var users = Map.empty[Contact, ActorRef]
 
   def receive = {
-    case m @ NewUser(invite,name) => {
+    case m @ NewUser(invite,name, deviceId) => {
       val contact = invite //parseLong(invite, 16).toString
       println(s"Decoded String is: $contact")
-      self.tell(User(contact, name, None), sender)
+      self.tell(User(contact, name, deviceId), sender)
     }
     case m @ (to: User, from: User, intensity: Double) => self.tell(Slap(to, intensity, from), sender)
     case m : Slap => getUserActor(m.to) forward m

@@ -33,6 +33,7 @@ class WebServiceActor extends Actor
 // this trait defines our service behavior independently from the service actor
 trait WebService extends HttpService with SlapServices
   with ContactNormalization {
+
   //MEHHH can we not be asking?
   import scala.concurrent.duration._
   import akka.pattern.ask
@@ -47,9 +48,9 @@ trait WebService extends HttpService with SlapServices
     get { complete("What's up bro?!") }
   } ~
   path("register") {
-    parameters("invite", "name" ?) { (invite, name) =>
+    parameters("invite", "name" ?, "deviceId" ?) { (invite, name, deviceId) =>
       println(s"Registering ${invite} as ${name}")
-      val response = Await.result( userSupe ? NewUser(invite, name), 3 seconds)
+      val response = Await.result( userSupe ? NewUser(invite, name, deviceId), 3 seconds)
       complete( response.toString )
     }
   } ~
@@ -78,12 +79,18 @@ trait WebService extends HttpService with SlapServices
         <p>If you haven't downloaded the app yet, you can do it here.</p>
       </li>
       <li>
-        <h2>Accept this invitation</h2>
-        You must accept from your device, and the app must be installed.
+        <h2>Accept, and Get SLAPPIN!</h2>
+        <ul>
+          <li>You must accept this from your phone or device.</li>
+          <li>The app must be installed.</li>
+        </ul>
+
+        <p>Accept below</p>
+
         <form method="GET" action="hi5://invite">
           <input name="invite" value={inviteCode} type="hidden" />
           <input name="name" placeholder="Your Name" />
-          <input type="submit" value="Get Slapping"/>
+          <input type="submit" value="Get Slappin'"/>
         </form>
       </li>
     </ol>
@@ -135,6 +142,7 @@ trait WebService extends HttpService with SlapServices
       complete(user1.toString)
     }
   } ~
+  //@deprecated
   pathPrefix("users") { //@"%@/user/%@/%@/%@", contact, name, deviceToken
     pathPrefix(Segment) { appleId =>
       pathPrefix(Segment) { contact =>
