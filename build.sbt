@@ -36,6 +36,7 @@ libraryDependencies ++= {
     "org.fusesource.leveldbjni"   % "leveldbjni-all"   % "1.8",
     "com.github.fernandospr" % "javapns-jdk16"  % "2.3.1",
     "com.notnoop.apns" % "apns" % "0.2.3"
+    //"com.typesafe.sbt" % "sbt-twirl" % "1.1.1"
   )
 }
 
