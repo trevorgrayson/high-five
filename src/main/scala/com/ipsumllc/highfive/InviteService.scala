@@ -16,12 +16,14 @@ trait InviteService extends HttpService with SlapServices {
       <span class="small">You made it bro.</span>
     </h1>
     <p>You were pre-approved for iFive Club.  This never happens. You must be someone very special.</p>
-    <p>You're about to significantly increased your <strong>high five</strong> radius.</p>
-    <p>Just a few more quick steps...</p>
+    <p>You're about to significantly increased your <strong>high five</strong> radius with the high five elite.
+      Just a few more quick steps...
+    </p>
     <ol class="steps">
       <li>
         <h2>Download the App</h2>
-        <p>If you haven't downloaded the app yet, you can do it here.</p>
+        <p>If you haven't downloaded the app yet, you can do it
+          <a href="#" onclick="alert('I.O.U.')">here</a>.</p>
       </li>
       <li>
         <h2>Join the Club</h2>
@@ -40,7 +42,7 @@ trait InviteService extends HttpService with SlapServices {
         </form>
         <ul>
           <li>You must have the app installed.</li>
-          <li>You must accept this from your phone or device.</li>
+          <li>You must join from your phone or mobile device.</li>
         </ul>
       </li>
     </ol>

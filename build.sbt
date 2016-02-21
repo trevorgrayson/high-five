@@ -3,7 +3,7 @@
 
 organization  := "com.ipsumllc"
 
-version       := "0.8"
+version       := "0.9"
 
 scalaVersion  := "2.11.1"
 

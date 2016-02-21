@@ -13,7 +13,6 @@ import spray.routing._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Future}
 
-// mightyslap.com
 // we don't implement our route structure directly in the service actor because
 // we want to be able to test it independently, without having to spin up an actor
 class WebServiceActor extends Actor
