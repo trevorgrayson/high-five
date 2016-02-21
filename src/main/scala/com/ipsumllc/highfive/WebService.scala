@@ -1,18 +1,17 @@
-package com.example
+package com.ipsumllc.highfive
 
 import akka.actor.Actor
-import spray.routing._
-import spray.http._
-import MediaTypes._
-import com.ipsumllc.highfive.users.User
-import com.ipsumllc.highfive.services.SlapServices
 import akka.util.Timeout
-
-import scala.concurrent.{Future, Await, ExecutionContext}
-import ExecutionContext.Implicits.global
+import com.ipsumllc.highfive.services.SlapServices
 import com.ipsumllc.highfive.slappers.Slap
-import com.typesafe.config.ConfigFactory
+import com.ipsumllc.highfive.users.User
 import com.ipsumllc.highfive.util.ContactNormalization
+import com.typesafe.config.ConfigFactory
+import spray.http.MediaTypes._
+import spray.routing._
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{Await, Future}
 
 // mightyslap.com
 // we don't implement our route structure directly in the service actor because
@@ -20,27 +19,24 @@ import com.ipsumllc.highfive.util.ContactNormalization
 class WebServiceActor extends Actor
   with WebService
   with SlapServices {
-  // the HttpService trait defines only one abstract member, which
-  // connects the services environment to the enclosing actor or test
+
   def actorRefFactory = context
 
-  // this actor only runs our route, but you could add
-  // other things here, like request stream processing
-  // or timeout handling
-  def receive = runRoute(myRoute
-  )
+  def receive = runRoute(myRoute)
 }
 
 // this trait defines our service behavior independently from the service actor
 trait WebService extends HttpService with SlapServices
   with RegisterService
   with InviteService
+  with StaticAssetService
   with ContactNormalization
   {
 
   //MEHHH can we not be asking?
-  import scala.concurrent.duration._
   import akka.pattern.ask
+
+  import scala.concurrent.duration._
 
   val config = ConfigFactory.load()
   val inviteUrl = config.getString("links.invite")
@@ -73,5 +69,6 @@ trait WebService extends HttpService with SlapServices
     }
   } ~
   registerRoutes ~
-  inviteRoutes
+  inviteRoutes ~
+  staticAssetRoutes
 }

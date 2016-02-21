@@ -1,29 +1,78 @@
 <html>
   <head>
     <title>iFive.Club</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
     <link rel="stylesheet" href="http://necolas.github.io/normalize.css/"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/ifive-club.css"/>
+    <script src="http://code.jquery.com/jquery-1.12.0.min.js"></script>
     <style>
-      
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>High Five</h1>
-      <p>What's up bro?! What would happen if we just let anyone in?</p>
+      <h1>iFive.Club<br/><span class="small">the exclusive high five network</span></h1>
+      <p>
+        iFive Club is the world's most immersive virtual high five experience that can be shared
+        between two people anywhere in the world.
+      </p>
+      <p></p>
 
       <form method="GET" action="/invite">
         <p>Sign up for the wait list.</p>
-        <div>
-        <input name="contact" class="form-control" type="text" placeholder="Your Cell Number"/>
+        <div class="input-group">
+          <div class="input-group-addon">Mobile:</div>
+          <input name="contact" class="form-control" type="text" placeholder="Your Mobile Number"/>
         </div>
         <br/>
         <div>
           <input type="submit" value="Join" class="form-control btn btn-success"/>
         </div>
       </form>
+      <br/>
+      <br/>
+
+      <p style="text-align:center">We are our own worst critics, and this is what we're saying:</p>
+      <blockquote>
+        "iFive Club is the most exclusive high five club in the world."
+        <i>&mdash; iFive Club</i>
+      </blockquote>
+      <blockquote>
+        "The iFive Club has simultaneously democratised the high five, while also making it unreasonably exclusive."
+        <i>&mdash; iFive Club</i>
+      </blockquote>
+      <div class="testimonials-container">
+        <p>People who are not in the iFive Club:</p>
+        <ul class="testimonials">
+          <li><img src="/images/beyonce-sqr.jpg"/>Beyoncé</li>
+          <li><img src="/images/mark-cuban-sqr.jpg"/>Mark Cuban</li>
+          <li><img src="/images/justin-timberlake-sqr.jpg"/>Justin Timberlake</li>
+          <li><img src="/images/denzel-washington-sqr.jpg"/>Denzel Washington</li>
+          <!--
+          <li><img src="/images/george-cloney-sqr.jpg"/>George Cloney</li>
+          <li><img src="/images/bill-gates-sqr.jpg"/>Bill Gates</li>
+          <li><img src="/images/justin-bieber-sqr.jpg"/>Justin Bieber</li>
+          <li><img src="/images/jay-z-sqr.jpg"/>Jay Z</li>
+          <li><img src="/images/andre-3000-sqr.jpg"/>Andre 3000</li>
+          <li><img src="/images/howard-stern-sqr.jpg"/>Howard Stern</li>
+          <!--
+          <li>Young Pamela Anderson</li>
+          <li>Young Megan Fox</li>
+          <li>Brad Pitt</li>
+          <li>Johnny Depp</li>
+          -->
+        </ul>
+      </div>
+      <script>
+        $(document).ready( function() {
+          $.each($('.testimonials li'),function(i){
+            $(this).fadeOut().
+              delay(i*4000).fadeIn('slow').
+              delay(2900).fadeOut('slow');
+          });
+        } )
+      </script>
     </div>
   </body>
 </html>

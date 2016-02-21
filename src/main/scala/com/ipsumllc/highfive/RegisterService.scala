@@ -1,14 +1,14 @@
-package com.example
+package com.ipsumllc.highfive
 
 /**
  * Created by tgrayson on 2/19/16.
  */
 
 import akka.util.Timeout
-import spray.routing._
-import com.ipsumllc.highfive.users.{NewUser, User}
 import com.ipsumllc.highfive.services.SlapServices
+import com.ipsumllc.highfive.users.{NewUser, User}
 import com.ipsumllc.highfive.util.ContactNormalization
+import spray.routing._
 
 import scala.concurrent.Await
 
@@ -16,8 +16,9 @@ trait RegisterService extends HttpService
   with SlapServices
   with ContactNormalization {
 
-  import scala.concurrent.duration._
   import akka.pattern.ask
+
+  import scala.concurrent.duration._
 
   val registerRoutes =
     path("register") {

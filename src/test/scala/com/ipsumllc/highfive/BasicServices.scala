@@ -1,10 +1,10 @@
 package com.ipsumllc.highfive
 
+import com.ipsumllc.highfive.WebService
 import org.specs2.mutable.Specification
 import spray.testkit.Specs2RouteTest
 import spray.http._
 import StatusCodes._
-import com.example.WebService
 import com.ipsumllc.highfive.users.{Contact, User}
 //import sun.misc.{BASE64Decoder, BASE64Encoder}
 

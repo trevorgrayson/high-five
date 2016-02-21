@@ -1,0 +1,91 @@
+body {
+  background: url(/images/wood-background.jpg);
+  color: #fff;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+h1 .small {
+  text-shadow: 1px 0px 0px #999;
+  -webket-text-shadow: 1px 0px 0px #999;
+  -moz-text-shadow: 1px 0px 0px #999;
+}
+.steps {
+  margin-left:  0;
+  padding-left: 0;
+}
+.steps ol,
+.steps li {
+  font-size: 25px;
+  margin-left:  0;
+  padding-left; 0;
+}
+
+.steps li p,
+.steps li ul li,
+.steps li ol li,
+.steps li ol,
+.steps li form {
+  font-size: 14px;
+  margin-left:  0;
+  padding-left; 0;
+}
+
+.steps ul li {
+  margin-left:  0;
+  padding-left: 0;
+}
+
+.input-group {
+  margin-bottom: 10px;
+}
+
+blockquote {
+  display: inline-block; *display: block; zoom: 1;
+  width: 45%;
+  vertical-align: top;
+  border: 0;
+  text-align: center;
+}
+blockquote i {
+  display: block;
+  text-align right;
+  margin-top: 10px;
+  color: #999;
+}
+
+.testimonials-container p {
+  font-style: italic;
+}
+.testimonials-container ul,
+.testimonials-container li,
+.testimonials-container {
+  text-align: center;
+}
+.testimonials-container li {
+  display: table;
+  margin: 0 auto;
+}
+.testimonials {
+  position: relative;
+  height: 70px;
+
+  list-style: none;
+  font-weight:  bold;
+}
+.testimonials li {
+  position: absolute;
+  width: 100%;
+  display: none;
+}
+.testimonials :first-child {
+}
+.testimonials img {
+  height: 70px;
+  width: 70px;
+  margin-right: 10px;
+  border-radius: 35px;
+  -webkit-border-radius: 35px;
+  -moz-border-radius: 35px;
+}
