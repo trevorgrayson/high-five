@@ -30,7 +30,7 @@ trait InviteService extends HttpService with SlapServices {
         <form method="GET" action="hi5://invite">
           <div class="input-group">
             <div class="input-group-addon">Mobile:</div>
-            <input name="invite" value={inviteCode} class="form-control" placeholder="Your Name" disabled="disabled"/>
+            <input name="invite" value={inviteCode} class="form-control" placeholder="Your Name" readonly="readonly" />
           </div>
           <div class="input-group">
             <div class="input-group-addon">Name:</div>
