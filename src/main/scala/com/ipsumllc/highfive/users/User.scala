@@ -52,7 +52,7 @@ class UserActor(var state: User) extends Actor {
       sender ! state
       //persist(user)(updateState)
     }
-    case s: Slap => println("SLAP:" + state);slapWorker forward Slap(s.to, s.intensity, state)
+    case s: Slap => println("SLAP:" + state);slapWorker forward Slap(state, s.intensity, s.from)
     //case DELETE => deleteMessages(999999)
     //case "snap" => saveSnapshot(state)
     case "print" => println(state)

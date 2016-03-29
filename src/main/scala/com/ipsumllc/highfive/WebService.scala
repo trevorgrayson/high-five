@@ -4,7 +4,7 @@ import akka.actor.Actor
 import akka.util.Timeout
 import com.ipsumllc.highfive.services.SlapServices
 import com.ipsumllc.highfive.slappers.Slap
-import com.ipsumllc.highfive.users.User
+import com.ipsumllc.highfive.users.{Contact, User}
 import com.ipsumllc.highfive.util.ContactNormalization
 import com.typesafe.config.ConfigFactory
 import spray.http.MediaTypes._
