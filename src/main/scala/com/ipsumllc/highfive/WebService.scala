@@ -58,7 +58,9 @@ trait WebService extends HttpService with SlapServices
           val tU = User(to, None, None)
 
           val response: Future[Any] = for {
-            r  <- userSupe ? Slap(tU, jerk, fU)
+            fromU <- (userSupe ? fU).mapTo[User]
+            toU   <- (userSupe ? tU).mapTo[User]
+            r     <- userSupe ? Slap(toU, jerk, fromU)
           } yield r
 
           val out = Await.result(response, 10 seconds)

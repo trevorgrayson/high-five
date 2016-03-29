@@ -23,7 +23,7 @@ trait RegisterService extends HttpService
   val registerRoutes =
     path("register") {
       parameters("invite", "name" ?, "deviceId" ?) { (invite, name, deviceId) =>
-        println(s"Registering ${invite} as ${name}")
+        println(s"Registering ${invite} as ${name} (${deviceId}")
         val response = Await.result( userSupe ? NewUser(invite, name, deviceId), 3 seconds)
         complete( response.toString )
       }

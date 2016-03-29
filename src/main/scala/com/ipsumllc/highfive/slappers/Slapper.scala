@@ -1,7 +1,6 @@
 package com.ipsumllc.highfive.slappers
 
 import com.notnoop.apns.{ApnsService, APNS}
-import spray.http.Uri
 import spray.json.DefaultJsonProtocol._
 import spray.json._
 
@@ -13,7 +12,6 @@ import spray.json._
  */
 
 object Slapper {
-  val domain = "http://ipsumllc.com/hi5/"
   val APNSCertPath = "/etc/highfive/hi5.p12"
   val APNSCertPassword = "high5"
 
@@ -26,7 +24,7 @@ trait Slapper  {
   import Slapper._
 
   val service: ApnsService = APNS.newService.withCert(APNSCertPath, APNSCertPassword)
-                               .withSandboxDestination.build
+                               .withProductionDestination().build
 
   def sendSlap(m: Slap) {
 
@@ -43,8 +41,6 @@ trait Slapper  {
       "jerk" -> m.intensity.toString
     )
 
-    //APNS.newPayload().alertBody("Can't be simpler than this!").build();
-
     val payload = Map(
 
       "aps" -> aps,
@@ -52,14 +48,12 @@ trait Slapper  {
 
     ).toJson.toString()
 
-    println(m.from)
-    println(m.to)
-    println(s"attempting to send a slap ${payload}")
+    println(s"attempting to send a slap ${m.from} ${m.to} ${payload}")
 
     m.to.appleId.map {
       case appleId =>
         println(s"Sending to: ${appleId}")
-        push(appleId, payload)
+        val response = push(appleId, payload)
     }
 
     //TODO consider push queue https://code.google.com/p/javapns/wiki/PushNotificationAdvanced
