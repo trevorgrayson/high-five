@@ -12,8 +12,27 @@ import spray.json._
  */
 
 object Slapper {
-  val APNSCertPath = "/etc/highfive/hi5.p12"
+  val STAGING = "staging"
+
+  val env = scala.util.Properties.envOrElse("SLAP_ENV", "production")
+
   val APNSCertPassword = "high5"
+
+  val APNSCertPath = env match {
+    case STAGING => "/etc/highfive/hi5-dev.p12"
+    case _       => "/etc/highfive/hi5.p12"
+  }
+
+  val service: ApnsService = env match {
+    case STAGING =>
+      println("Preparing Apple sandbox environment.")
+      APNS.newService.withCert(APNSCertPath, APNSCertPassword)
+        .withSandboxDestination().build
+    case _ =>
+      println("Preparing Apple production environment.")
+      APNS.newService.withCert(APNSCertPath, APNSCertPassword)
+        .withProductionDestination().build
+  }
 
   val sound = "highfive-0.m4a"
 
@@ -23,8 +42,6 @@ object Slapper {
 trait Slapper  {
   import Slapper._
 
-  val service: ApnsService = APNS.newService.withCert(APNSCertPath, APNSCertPassword)
-                               .withProductionDestination().build
 
   def sendSlap(m: Slap) {
 

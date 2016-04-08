@@ -65,13 +65,18 @@
         </ul>
       </div>
       <script>
-        $(document).ready( function() {
-          $.each($('.testimonials li'),function(i){
-            $(this).fadeOut().
-              delay(i*4000).fadeIn('slow').
-              delay(2900).fadeOut('slow');
-          });
-        } )
+        var carousel = 0
+
+        setInterval(function() {
+          $testi = $('.testimonials li')
+          $testi.fadeOut('slow')
+          $($testi[carousel]).delay(500).fadeIn('slow');
+          if( carousel == $testi.length-1) {
+            carousel = 0
+          } else {
+            carousel = carousel + 1
+          }
+        }, 3000)
       </script>
     </div>
   </body>
