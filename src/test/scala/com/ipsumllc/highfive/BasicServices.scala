@@ -1,6 +1,5 @@
 package com.ipsumllc.highfive
 
-import com.ipsumllc.highfive.WebService
 import org.specs2.mutable.Specification
 import spray.testkit.Specs2RouteTest
 import spray.http._
